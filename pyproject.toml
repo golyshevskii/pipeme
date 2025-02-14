@@ -11,7 +11,11 @@ requires-python = ">=3.11,<3.12"
 dependencies = [
     "python-dotenv (>=1.0.1,<2.0.0)",
     "python-telegram-bot (>=21.10,<22.0)",
-    "pydantic-ai[logfire] (>=0.0.23,<0.0.24)"
+    "pydantic-ai[logfire] (>=0.0.23,<0.0.24)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "sshtunnel (>=0.4.0,<0.5.0)",
+    "sqlalchemy (>=2.0.38,<3.0.0)"
 ]
 
 

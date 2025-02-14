@@ -39,11 +39,11 @@ def delete_file(path: str) -> None:
     path: File path
     """
     if not os.path.exists(path):
-        logger.warning(f"Path does not exist: {path}")
+        logger.warning("Path does not exist: {path}", extra={"path": path})
         return
 
     os.remove(path)
-    logger.info(f"File has been deleted: {path}")
+    logger.info("File has been deleted: {path}", extra={"path": path})
 
 
 def delete_files(path: str, exclude: list[str] = None) -> None:
@@ -56,7 +56,7 @@ def delete_files(path: str, exclude: list[str] = None) -> None:
     exclude: list of files to exclude
     """
     if not os.path.exists(path):
-        logger.warning(f"Path does not exist: {path}")
+        logger.warning("Path does not exist: {path}", extra={"path": path})
         return
 
     files = os.listdir(path)
@@ -66,4 +66,4 @@ def delete_files(path: str, exclude: list[str] = None) -> None:
 
         os.remove(f"{path}/{file}")
 
-    logger.info(f"Files have been deleted from the {path}")
+    logger.info("Files have been deleted from the {path}", extra={"path": path})

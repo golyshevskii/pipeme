@@ -1,4 +1,5 @@
-from core.bot.wrapper import access
+from core.bot.menu import set_menu
+from core.bot.wrapper import USER, USER_LOCK, access
 from core.templates.bot.message import MESSAGE
 from logs.logger import get_logger
 from telegram import Update
@@ -9,9 +10,15 @@ logger = get_logger(__name__)
 
 @access
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Responds to /start command"""
+    """Respond to /start command."""
     user_id = update.effective_user.id
     username = update.effective_user.username
-    logger.debug(f"User {username} ({user_id}) started the bot")
+    logger.debug(
+        "User {username} ({user_id}) started the bot", extra={"username": username, "user_id": user_id}
+    )
 
-    await update.message.reply_markdown_v2(MESSAGE["start"])
+    with USER_LOCK:
+        USER[user_id] = {}
+
+    reply_markup = await set_menu()
+    await update.message.reply_markdown_v2(MESSAGE["start"], reply_markup=reply_markup)

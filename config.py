@@ -16,3 +16,6 @@ DATA_PATH = f"{BASE_DIR}/data/"
 # Telegram
 G8AGENT_BOT_TOKEN = os.getenv("ENV_VAR_G8AGENT_BOT_TOKEN")
 G8AGENT_BOT_URL = "https://t.me/G8AgentBot"
+
+# PSQL
+PSQL_CONN_STR = os.getenv("ENV_VAR_PSQL_CONN_STR")

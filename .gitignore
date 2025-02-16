@@ -174,3 +174,4 @@ cython_debug/
 .logs/
 *-service-account.json
 temp.*py*
+tmp.*py*

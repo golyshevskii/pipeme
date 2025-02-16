@@ -3,6 +3,7 @@ from functools import wraps
 
 from core.bot.menu import set_menu
 from core.scripts.psql.manager import insert_tg_bot_user_access, select_tg_bot_user_access
+from core.templates.bot.command import HAS_ACCESS_COMMANDS, NO_ACCESS_COMMANDS
 from core.templates.bot.message import MESSAGE
 from logs.logger import get_logger
 from telegram import Update
@@ -17,8 +18,8 @@ USER_LOCK = asyncio.Lock()
 async def on_no_user(update: Update):
     """Add new user to the database."""
     logger.debug(
-        "New user {username} ({user_id})",
-        extra={"username": update.effective_user.username, "user_id": update.effective_user.id},
+        "New user %(username)s (%(user_id)s)",
+        {"username": update.effective_user.username, "user_id": update.effective_user.id},
     )
 
     replay_only_faq = await set_menu(only_faq=True)
@@ -33,8 +34,8 @@ async def on_no_user(update: Update):
 async def on_no_access(update: Update):
     """Respond to users without access."""
     logger.warning(
-        "Access denied for {username} ({user_id})",
-        extra={"username": update.effective_user.username, "user_id": update.effective_user.id},
+        "Access denied for %(username)s (%(user_id)s)",
+        {"username": update.effective_user.username, "user_id": update.effective_user.id},
     )
 
     replay_only_faq = await set_menu(only_faq=True)
@@ -46,6 +47,9 @@ def access(func):
     async def wrapped(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
         user = await asyncio.get_event_loop().run_in_executor(
             None, select_tg_bot_user_access, update.effective_user.id
+        )
+        await context.bot.set_my_commands(
+            HAS_ACCESS_COMMANDS if not user.empty and user.has_access[0] else NO_ACCESS_COMMANDS
         )
 
         if user.empty:

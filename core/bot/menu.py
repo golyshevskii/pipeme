@@ -1,4 +1,9 @@
-from core.templates.bot.button import BUTTON_MAP, INLINE_CONFIRM_REQUEST_MENU_BUTTON, INLINE_FAQ_MENU_BUTTON
+from core.templates.bot.button import (
+    BUTTON_MAP,
+    INLINE_CONFIRM_REQUEST_MENU_BUTTON,
+    INLINE_FAQ_MENU_BUTTON,
+    MENU_BUTTON,
+)
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 
 
@@ -8,7 +13,7 @@ async def set_menu(only_faq=False):
         keyboard = [[KeyboardButton(BUTTON_MAP["faq"])]]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
-    keyboard = [[KeyboardButton(BUTTON_MAP["request"]), KeyboardButton(BUTTON_MAP["faq"])]]
+    keyboard = [[KeyboardButton(BUTTON_MAP[button])] for button in MENU_BUTTON]
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
 

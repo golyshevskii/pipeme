@@ -3,9 +3,9 @@ from typing import Any, Optional, Union
 import pandas as pd
 import psycopg2
 import sshtunnel
+from core.scripts.tools.files import read_file
 from logs.logger import get_logger
 from psycopg2.extras import execute_batch
-from scripts.tools.files import read_file
 from sqlalchemy import create_engine
 
 logger = get_logger(__name__)
@@ -43,6 +43,8 @@ class PSQLQueryBuilder:
         """
         if update_columns is None and pkeys:
             update_columns = [col for col in columns if col not in pkeys]
+        else:
+            update_columns = columns
 
         attributes = ",".join(columns)
 
@@ -154,11 +156,11 @@ class PSQLClient:
 
             if select:
                 data = pd.read_sql(sql=sql, con=connection)
-                logger.info("Data has been extracted. Shape: {shape}", extra={"shape": data.shape})
+                logger.info("Data has been extracted. Shape: %(shape)s", {"shape": data.shape})
             else:
                 result = connection.execute(sql)
                 logger.info(
-                    "SQL has been executed. Effected rows: {rowcount}", extra={"rowcount": result.rowcount}
+                    "SQL has been executed. Effected rows: %(rowcount)s", {"rowcount": result.rowcount}
                 )
         self._disconnect()
 
@@ -217,7 +219,7 @@ class PSQLClient:
                 conn.commit()
         self._disconnect()
 
-        logger.info("Rows have been inserted (updated): {len}", extra={"len": len(data)})
+        logger.info("Rows have been inserted (updated): %(len)s", {"len": len(data)})
 
     def _open_sshtunnel(self):
         """Create SSH tunnel to the server."""
@@ -236,7 +238,7 @@ class PSQLClient:
 
             self.engine = create_engine(self.conn_str)
         except Exception as e:
-            logger.error("Failed to connect to the PSQL database\n{e}", extra={"e": e})
+            logger.error("Failed to connect to the PSQL database\n%(error)s", extra={"error": e})
             self._disconnect()
             raise e
 

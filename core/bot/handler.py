@@ -1,3 +1,4 @@
+from core.agent.run import run_agent
 from core.bot.menu import set_confirm_request_inline_menu, set_faq_inline_menu
 from core.bot.wrapper import USER, USER_LOCK, access
 from core.templates.bot.button import BUTTON_MAP
@@ -48,7 +49,7 @@ async def handle_confirm_request(update: Update, context: CallbackContext):
         parse_mode="MarkdownV2",
     )
 
-    # TODO: start process
+    await run_agent(user_id)
 
 
 async def handle_reset_request(update: Update, context: CallbackContext):

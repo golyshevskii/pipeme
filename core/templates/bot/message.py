@@ -1,8 +1,8 @@
-from config import G8AGENT_BOT_ADMIN
+from config import TG_BOT_ADMIN
 
 MESSAGE = {
     "start": "Hi there 👋\n\nExplain me what you need by message 👇",
-    "need_access": f"You don't have access\\.\nRequest access from [admin](https://t\\.me/{G8AGENT_BOT_ADMIN})\\.",
+    "need_access": f"You don't have access\\.\nRequest access from [admin](https://t\\.me/{TG_BOT_ADMIN})\\.",
     "confirm_request": "Double check your request 👇",
     "run_request": r"Request confirmed\. Thinking ⌛",
     "reset_request": "Request reset\\.\nLet's start again 👇",

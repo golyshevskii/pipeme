@@ -1,4 +1,4 @@
-from config import G8AGENT_BOT_TOKEN
+from config import TG_BOT_TOKEN
 from core.bot.command import start
 from core.bot.handler import (
     handle_confirm_request,
@@ -16,7 +16,7 @@ logger = get_logger(__name__)
 def run():
     """Run the main logic of the Bot."""
     logger.debug("BEGIN")
-    app = ApplicationBuilder().token(G8AGENT_BOT_TOKEN).build()
+    app = ApplicationBuilder().token(TG_BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.Regex("(?i)^faq$"), handle_faq))

@@ -1,13 +1,13 @@
 from config import OPENAI_API_KEY, OPENAI_API_URL
 from core.agent.models import InvalidRequest, Response
-from core.agent.prompts import DB_SCHEMA, SQL_EXAMPLES, WHAT_TO_DO, WHO_ARE_YOU, YML_EXAMPLES
+from core.agent.prompts import DB_SCHEMA, REMINDER, SQL_EXAMPLES, WHAT_TO_DO, WHO_ARE_YOU, YML_EXAMPLES
 from logs.logger import get_logger
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 
 logger = get_logger(__name__)
 
-OPENAI_MODEL = OpenAIModel("openai:gpt-4o", base_url=OPENAI_API_URL, api_key=OPENAI_API_KEY)
+OPENAI_MODEL = OpenAIModel("gpt-4o", base_url=OPENAI_API_URL, api_key=OPENAI_API_KEY)
 AGENT: Agent[Response] = Agent(
     model=OPENAI_MODEL,
     result_type=Response,
@@ -42,6 +42,9 @@ async def system_prompt() -> str:
 
     ### What to do:
     {WHAT_TO_DO}
+
+    ### Reminder:
+    {REMINDER}
     """
 
 

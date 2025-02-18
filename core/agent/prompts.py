@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 WHO_ARE_YOU = (
     "You are an assistant (Data Engineer) who helps generate a YAML and SQL based on a user request."
 )
@@ -40,4 +42,8 @@ ORDER BY trade_date;
 WHAT_TO_DO = """
 1. Generate YAML according to the request
 2. Generate SQL according to the request
+"""
+
+REMINDER = f"""
+Current time (UTC): {datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")}
 """

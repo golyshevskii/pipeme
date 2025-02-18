@@ -50,7 +50,7 @@ async def handle_confirm_request(update: Update, context: CallbackContext):
     )
 
     await run_agent(user_id)
-    await update.message.reply_text(USER[user_id]["result"])
+    await query.edit_message_text(USER[user_id]["result"], reply_markup=None)
 
 
 async def handle_reset_request(update: Update, context: CallbackContext):

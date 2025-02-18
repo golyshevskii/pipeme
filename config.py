@@ -14,9 +14,9 @@ LOG_PATH = f"{BASE_DIR}/logs/"
 DATA_PATH = f"{BASE_DIR}/data/"
 
 # Telegram
-G8AGENT_BOT_ADMIN = "golyshevskii"
-G8AGENT_BOT_TOKEN = os.getenv("ENV_VAR_G8AGENT_BOT_TOKEN")
-G8AGENT_BOT_URL = "https://t.me/G8AgentBot"
+TG_BOT_ADMIN = "golyshevskii"
+TG_BOT_TOKEN = os.getenv("ENV_VAR_TG_BOT_TOKEN")
+TG_BOT_URL = "https://t.me/pipeme_bot"
 
 # PSQL
 PSQL_CONN_STR = os.getenv("ENV_VAR_PSQL_CONN_STR")

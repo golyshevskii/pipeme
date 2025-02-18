@@ -1,42 +1,25 @@
-from typing import Annotated, Union
-
-from annotated_types import MinLen
+from config import OPENAI_API_KEY, OPENAI_API_URL
+from core.agent.models import InvalidRequest, Response
+from core.agent.prompts import DB_SCHEMA, SQL_EXAMPLES, WHAT_TO_DO, WHO_ARE_YOU, YML_EXAMPLES
 from logs.logger import get_logger
-from pydantic import BaseModel, Field
 from pydantic_ai import Agent
-from typing_extensions import TypeAlias
+from pydantic_ai.models.openai import OpenAIModel
 
 logger = get_logger(__name__)
 
-
-class Success(BaseModel):
-    """Response when SQL could be successfully generated."""
-
-    sql_query: Annotated[str, MinLen(1)]
-    explanation: str = Field("", description="Explanation of the SQL query, as markdown")
-
-
-class InvalidRequest(BaseModel):
-    """Response the user input didn't include enough information to generate SQL."""
-
-    error_message: str
-
-
-Response: TypeAlias = Union[Success, InvalidRequest]
+OPENAI_MODEL = OpenAIModel("openai:gpt-4o", base_url=OPENAI_API_URL, api_key=OPENAI_API_KEY)
 AGENT: Agent[Response] = Agent(
-    "gpt4-o1-mini",
+    model=OPENAI_MODEL,
     result_type=Response,
 )
 
 
 @AGENT.system_prompt
-async def build_system_prompt(
-    who_am_i: str, db_schema: str, yml_examples: str, sql_examples: str, what_to_do: str
-) -> str:
+async def system_prompt() -> str:
     """
     Build system prompt.
 
-    Params
+    Fields
     ------
     who_am_i: Explaining who an agent is and what he must do
     db_schema: Database schema from where an agent will get data about entities
@@ -46,22 +29,25 @@ async def build_system_prompt(
     """
     return f"""
     ### Who are you:
-    {who_am_i}
+    {WHO_ARE_YOU}
 
     ### Database schema:
-    {db_schema}
+    {DB_SCHEMA}
 
     ### YAML Examples:
-    {yml_examples}
+    {YML_EXAMPLES}
 
     ### SQL Examples:
-    {sql_examples}
+    {SQL_EXAMPLES}
 
     ### What to do:
-    {what_to_do}
+    {WHAT_TO_DO}
     """
 
 
 @AGENT.result_validator
 async def validate_result(result: Response) -> Response:
-    pass
+    """Validate agent result."""
+    if isinstance(result, InvalidRequest):
+        return result
+    return result

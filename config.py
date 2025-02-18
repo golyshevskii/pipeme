@@ -20,3 +20,7 @@ G8AGENT_BOT_URL = "https://t.me/G8AgentBot"
 
 # PSQL
 PSQL_CONN_STR = os.getenv("ENV_VAR_PSQL_CONN_STR")
+
+# OPENAI
+OPENAI_API_KEY = os.getenv("ENV_VAR_OPENAI_API_KEY")
+OPENAI_API_URL = "https://api.openai.com/v1"

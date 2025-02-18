@@ -14,6 +14,8 @@ async def run_agent(user_id: int) -> None:
     user_id: The ID of the user
     text: The user input
     """
+    logger.debug("Agent running for user: %(user_id)s", {"user_id": user_id})
+
     async with USER_LOCK:
         USER[user_id]["result"] = await AGENT.run(USER[user_id]["text"])
 

@@ -198,7 +198,7 @@ class PSQLClient:
         row_buffer: The number of rows to be inserted in each batch
         """
         if not data:
-            logger.info("No data to insert")
+            logger.info("No data to upsert")
             return
 
         query = PSQLQueryBuilder.build_upsert_query(
@@ -219,7 +219,7 @@ class PSQLClient:
                 conn.commit()
         self._disconnect()
 
-        logger.info("Rows have been inserted (updated): %(len)s", {"len": len(data)})
+        logger.info("Rows have been upserted: %(len)s", {"len": len(data)})
 
     def _open_sshtunnel(self):
         """Create SSH tunnel to the server."""

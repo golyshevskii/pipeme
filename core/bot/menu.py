@@ -29,7 +29,9 @@ async def set_faq_inline_menu():
 async def set_confirm_request_inline_menu():
     """Set confirm request inline menu."""
     inline_keyboard = [
-        [InlineKeyboardButton(BUTTON_MAP[button], callback_data=f"{button}")]
-        for button in INLINE_CONFIRM_REQUEST_MENU_BUTTON
+        [
+            InlineKeyboardButton(BUTTON_MAP[button], callback_data=f"{button}")
+            for button in INLINE_CONFIRM_REQUEST_MENU_BUTTON
+        ]
     ]
     return InlineKeyboardMarkup(inline_keyboard)

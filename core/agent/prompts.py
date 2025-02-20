@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 WHO_ARE_YOU = (
-    "You are an assistant (Data Engineer) who helps generate a YAML and SQL based on a user request."
+    "You are an Assistant (Data Engineer) who helps generate SQL and YAML scripts based on a user request."
 )
 
 DB_SCHEMA = """
@@ -40,8 +40,9 @@ ORDER BY trade_date;
 """
 
 WHAT_TO_DO = """
-1. Generate YAML according to the request
-2. Generate SQL according to the request
+1. Generate SQL according to the request
+2. Generate YAML according to the request
+3. Give a short explanation
 """
 
 REMINDER = f"""

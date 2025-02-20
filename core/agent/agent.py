@@ -34,10 +34,10 @@ async def system_prompt() -> str:
     ### Database schema:
     {DB_SCHEMA}
 
-    ### YAML Examples:
+    ### YAML examples (keep to the format):
     {YML_EXAMPLES}
 
-    ### SQL Examples:
+    ### SQL examples (keep to the format):
     {SQL_EXAMPLES}
 
     ### What to do:

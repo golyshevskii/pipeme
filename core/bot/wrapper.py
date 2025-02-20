@@ -33,7 +33,7 @@ async def on_no_user(update: Update):
 
 async def on_no_access(update: Update):
     """Respond to users without access."""
-    logger.warning(
+    logger.debug(
         "Access denied for %(username)s (%(user_id)s)",
         {"username": update.effective_user.username, "user_id": update.effective_user.id},
     )

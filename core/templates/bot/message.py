@@ -1,11 +1,11 @@
 from config import TG_BOT_ADMIN
 
 MESSAGE = {
-    "start": "Hi there 👋\n\nExplain me what you need by message 👇",
+    "start": "Hi there 👋\nExplain me what you need by message 👇",
     "need_access": f"You don't have access\\.\nRequest access from [admin](https://t\\.me/{TG_BOT_ADMIN})\\.",
-    "confirm_request": "Double check your request 👇",
+    "confirm_request": "Please, double check your request\\.\nIf everything is correct, click *Confirm* 👇",
     "run_request": "Request confirmed\\.\nThinking and building ⌛",
-    "reset_request": r"Okay\, let's start again 👇",
+    "reset_request": "Okay, let's start again 👇",
     "faq": r"*FAQ*\. Choose a question 👇",
     "faq_1": r"A bot that generates YAML and SQL scripts based on user request\.",
     "faq_2": (

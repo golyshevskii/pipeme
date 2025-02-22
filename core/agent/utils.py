@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 async def transcribe_audio(user_id: int, context: CallbackContext) -> str:
     """Transcribe user voice or audio file."""
-    logger.debug("Transcribing audio message for user: %(user_id)s", {"user_id": user_id})
+    logger.debug("Transcribing audio message for user %(user_id)s", {"user_id": user_id})
 
     file_info = await context.bot.get_file(USER[user_id]["request"].file_id)
     audio_data = await file_info.download_as_bytearray()
@@ -21,4 +21,9 @@ async def transcribe_audio(user_id: int, context: CallbackContext) -> str:
 
     client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_URL)
     transcription = client.audio.transcriptions.create(model="whisper-1", file=audio)
-    return transcription["text"]
+
+    logger.debug(
+        "Transcription for user %(user_id)s: %(transcription)s",
+        {"user_id": user_id, "transcription": transcription.text},
+    )
+    return transcription.text

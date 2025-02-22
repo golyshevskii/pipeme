@@ -43,6 +43,7 @@ async def handle_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "User %(username)s (%(user_id)s) sent unknown message",
                 {"username": username, "user_id": user_id},
             )
+            await update.message.reply_markdown_v2(MESSAGE["unknown_message"])
             return
 
     reply_markup = await set_confirm_request_inline_menu()
@@ -53,13 +54,6 @@ async def handle_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_to_message_id=update.message.message_id,
         reply_markup=reply_markup,
     )
-
-
-async def handle_faq(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle FAQ request."""
-    reply_markup = await set_faq_inline_menu()
-    await update.message.reply_markdown_v2(MESSAGE["faq"], reply_markup=reply_markup)
-    return
 
 
 async def handle_confirm_request(update: Update, context: CallbackContext):
@@ -74,7 +68,13 @@ async def handle_confirm_request(update: Update, context: CallbackContext):
         parse_mode="MarkdownV2",
     )
 
-    await run_agent(user_id)
+    try:
+        await run_agent(user_id, context)
+    except Exception as e:
+        logger.error("Failed to run agent: %s", e)
+        await query.edit_message_text(MESSAGE["run_agent_error"], parse_mode="MarkdownV2")
+        return
+
     data: Response = USER[user_id]["data"]
 
     if isinstance(data, SuccessRequest):
@@ -108,6 +108,13 @@ async def handle_reset_request(update: Update, context: CallbackContext):
     await context.bot.send_message(
         chat_id=update.effective_chat.id, text=MESSAGE["reset_request"], parse_mode="MarkdownV2"
     )
+
+
+async def handle_faq(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle FAQ request."""
+    reply_markup = await set_faq_inline_menu()
+    await update.message.reply_markdown_v2(MESSAGE["faq"], reply_markup=reply_markup)
+    return
 
 
 async def handle_faq_question(update: Update, context: CallbackContext):

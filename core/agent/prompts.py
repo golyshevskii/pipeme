@@ -45,6 +45,6 @@ WHAT_TO_DO = """
 3. Give a short explanation
 """
 
-REMINDER = f"""
+ADDITIONAL_INFORMATION = f"""
 Current time (UTC): {datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")}
 """

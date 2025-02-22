@@ -16,18 +16,19 @@ async def run_agent(user_id: int, context: CallbackContext) -> None:
     user_id: The ID of the user
     context: The context of the bot
     """
-    logger.debug("Agent running for user: %(user_id)s", {"user_id": user_id})
-
     if USER[user_id].get("is_audio"):
         request = await transcribe_audio(user_id, context)
     else:
         request = USER[user_id]["request"]
 
-    logger.debug("Agent running for user: %(user_id)s", {"user_id": user_id})
+    logger.info("Starting the agent for the user %(user_id)s", {"user_id": user_id})
     result = await AGENT.run(request)
 
     async with USER_LOCK:
         USER[user_id]["result"] = result
         USER[user_id]["data"] = result.data
 
-    logger.info("Agent has been run successfully for user: %(user_id)s.", {"user_id": user_id})
+    logger.info(
+        "The agent executed successfully for user %(user_id)s. Result: %(result)s",
+        {"user_id": user_id, "result": result.data},
+    )

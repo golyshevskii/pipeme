@@ -20,7 +20,9 @@ def run():
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.Regex("(?i)^faq$"), handle_faq))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input))
+    app.add_handler(
+        MessageHandler((filters.TEXT | filters.VOICE | filters.AUDIO) & ~filters.COMMAND, handle_input)
+    )
     app.add_handler(CallbackQueryHandler(handle_faq_question, pattern="^faq_"))
     app.add_handler(CallbackQueryHandler(handle_confirm_request, pattern="^confirm_request$"))
     app.add_handler(CallbackQueryHandler(handle_reset_request, pattern="^reset_request$"))

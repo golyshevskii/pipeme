@@ -1,6 +1,13 @@
 from config import OPENAI_API_KEY, OPENAI_API_URL
 from core.agent.models import InvalidRequest, Response
-from core.agent.prompts import DB_SCHEMA, REMINDER, SQL_EXAMPLES, WHAT_TO_DO, WHO_ARE_YOU, YML_EXAMPLES
+from core.agent.prompts import (
+    ADDITIONAL_INFORMATION,
+    DB_SCHEMA,
+    SQL_EXAMPLES,
+    WHAT_TO_DO,
+    WHO_ARE_YOU,
+    YML_EXAMPLES,
+)
 from logs.logger import get_logger
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
@@ -28,23 +35,23 @@ async def system_prompt() -> str:
     what_to_do: What an agent must do according to the request
     """
     return f"""
-    ### Who are you:
+    ## Who are you
     {WHO_ARE_YOU}
 
-    ### Database schema:
+    ## Database schema
     {DB_SCHEMA}
 
-    ### YAML examples (keep to the format):
+    ## Examples how to generate YAML (stick to the format!)
     {YML_EXAMPLES}
 
-    ### SQL examples (keep to the format):
+    ## Examples how to generate SQL (stick to the format!)
     {SQL_EXAMPLES}
 
-    ### What to do:
+    ## What to do
     {WHAT_TO_DO}
 
-    ### Reminder:
-    {REMINDER}
+    ## Additional information
+    {ADDITIONAL_INFORMATION}
     """
 
 

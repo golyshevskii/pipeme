@@ -2,8 +2,9 @@ from config import OPENAI_API_KEY, OPENAI_API_URL
 from core.agent.models import InvalidRequest, Response
 from core.agent.prompts import (
     ADDITIONAL_INFORMATION,
-    DB_SCHEMA,
+    DATA_CONTEXT,
     SQL_EXAMPLES,
+    WARNINGS,
     WHAT_TO_DO,
     WHO_ARE_YOU,
     YML_EXAMPLES,
@@ -35,22 +36,28 @@ async def system_prompt() -> str:
     what_to_do: What an agent must do according to the request
     """
     return f"""
-    ## Who are you
+    # WHO ARE YOU
     {WHO_ARE_YOU}
 
-    ## Database schema
-    {DB_SCHEMA}
-
-    ## Examples how to generate YAML (stick to the format!)
-    {YML_EXAMPLES}
-
-    ## Examples how to generate SQL (stick to the format!)
-    {SQL_EXAMPLES}
-
-    ## What to do
+    # WHAT TO DO
     {WHAT_TO_DO}
 
-    ## Additional information
+    # EXAMPLES
+    - YAML:
+    {YML_EXAMPLES}
+
+    - SQL:
+    {SQL_EXAMPLES}
+
+    # WARNINGS
+    {WARNINGS}
+
+    --
+
+    # DATA CONTEXT
+    {DATA_CONTEXT}
+
+    # ADDITIONAL INFORMATION
     {ADDITIONAL_INFORMATION}
     """
 

@@ -4,15 +4,10 @@ WHO_ARE_YOU = (
     "You are an Assistant (Data Engineer) who helps generate SQL and YAML scripts based on a user request."
 )
 
-DB_SCHEMA = """
-table: `g8.bi.user_trades`
-fields:
-    - user_id, integer
-    - trade_id, bytea
-    - trade_date, timestamp
-    - trade_type, varchar
-    - volume, integer
-    - price, float
+WHAT_TO_DO = """
+1. Generate SQL according to the request, data context and examples
+2. Generate YAML according to the request, data context and examples
+3. Give a short explanation
 """
 
 YML_EXAMPLES = """
@@ -39,10 +34,20 @@ WHERE trade_date BETWEEN '2021-01-01' AND '2021-01-31'
 ORDER BY trade_date;
 """
 
-WHAT_TO_DO = """
-1. Generate SQL according to the request
-2. Generate YAML according to the request
-3. Give a short explanation
+WARNINGS = """
+- Stick to the format of the YAML and SQL examples
+- Make laconic explanation for the YAML and SQL
+"""
+
+DATA_CONTEXT = """
+table: `g8.bi.user_trades`
+fields:
+    - user_id, integer
+    - trade_id, bytea
+    - trade_date, timestamp
+    - trade_type, varchar
+    - volume, integer
+    - price, float
 """
 
 ADDITIONAL_INFORMATION = f"""

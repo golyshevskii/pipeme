@@ -1,3 +1,4 @@
+from logging import INFO
 from typing import Any, Optional, Union
 
 import pandas as pd
@@ -6,9 +7,9 @@ import sshtunnel
 from core.scripts.tools.files import read_file
 from logs.logger import get_logger
 from psycopg2.extras import execute_batch
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, level=INFO)
 
 
 class PSQLQueryBuilder:
@@ -158,8 +159,9 @@ class PSQLClient:
                 data = pd.read_sql(sql=sql, con=connection)
                 logger.info("Data has been extracted. Shape: %(shape)s", {"shape": data.shape})
             else:
-                result = connection.execute(sql)
-                logger.info(
+                result = connection.execute(text(sql))
+                connection.commit()
+                logger.debug(
                     "SQL has been executed. Effected rows: %(rowcount)s", {"rowcount": result.rowcount}
                 )
         self._disconnect()

@@ -7,6 +7,7 @@ from core.bot.handler import (
     handle_input,
     handle_reset_request,
 )
+from core.scripts.tools.checker import check_dependencies
 from logs.logger import get_logger
 from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, MessageHandler, filters
 
@@ -32,4 +33,8 @@ def run():
 
 
 if __name__ == "__main__":
+    if not check_dependencies():
+        logger.error("Dependencies check failed. Exiting.")
+        exit(1)
+
     run()

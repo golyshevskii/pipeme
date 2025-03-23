@@ -24,3 +24,9 @@ PSQL_CONN_STR = os.getenv("ENV_VAR_PSQL_CONN_STR")
 # OPENAI
 OPENAI_API_KEY = os.getenv("ENV_VAR_OPENAI_API_KEY")
 OPENAI_API_URL = "https://api.openai.com/v1"
+
+# QDRANT
+QDRANT_API_KEY = os.getenv("ENV_VAR_QDRANT_API_KEY")
+QDRANT_API_URL = "http://localhost:6333"
+QDRANT_HOST = "localhost"
+QDRANT_PORT = 6333

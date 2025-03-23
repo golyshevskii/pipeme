@@ -28,9 +28,9 @@ def build_prompt(user_query: str, context_block: str) -> str:
     Формируем промпт для AI на основе найденного контекста.
     """
     prompt = (
-        f"Контекст:\n{context_block}\n\n"
         f"Вопрос:\n{user_query}\n\n"
-        "Пожалуйста, ответь, используя контекст выше."
+        "Пожалуйста, ответь на вопрос, используя контекст ниже."
+        f"Контекст:\n{context_block}\n\n"
     )
     return prompt
 

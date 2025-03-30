@@ -5,8 +5,8 @@ WHO_ARE_YOU = (
 )
 
 WHAT_TO_DO = """
-1. Generate SQL according to the request, data context and examples
-2. Generate YAML according to the request, data context and examples
+1. Generate SQL according to the request, context and examples
+2. Generate YAML according to the request, context and examples
 3. Give a short explanation
 """
 
@@ -29,25 +29,14 @@ SELECT trade_id,
        trade_type,
        volume,
        price
-FROM `g8.raw.trades` t
-WHERE trade_date BETWEEN '2021-01-01' AND '2021-01-31'
-ORDER BY trade_date;
+FROM `pipeme.raw.trades` t
+WHERE trade_dt BETWEEN '2021-01-01' AND '2021-01-31'
+ORDER BY trade_dt;
 """
 
 WARNINGS = """
 - Stick to the format of the YAML and SQL examples
 - Make laconic explanation for the YAML and SQL
-"""
-
-DATA_CONTEXT = """
-table: `g8.bi.user_trades`
-fields:
-    - user_id, integer
-    - trade_id, bytea
-    - trade_date, timestamp
-    - trade_type, varchar
-    - volume, integer
-    - price, float
 """
 
 ADDITIONAL_INFORMATION = f"""

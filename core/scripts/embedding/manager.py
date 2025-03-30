@@ -1,23 +1,29 @@
+import asyncio
 from typing import Union
 
+from core.scripts.embedding.model import BaseEmbeddingModel, EmbeddingModel
 from logs.logger import get_logger
-from sentence_transformers import SentenceTransformer
 
 logger = get_logger(__name__)
 
 
 class EmbeddingManager:
-    def __init__(self, model_name_or_path: str = "jinaai/jina-embeddings-v3"):
-        self.model_name_or_path = model_name_or_path
-        self.model = SentenceTransformer(model_name_or_path, trust_remote_code=True)
+    """
+    Manager for embedding models.
 
-    def vectorize(self, data: Union[str, list[str]]) -> Union[list[float], list[list[float]]]:
-        """
-        Vectorize data using the defined embedding model.
+    Attributes
+    ----------
+    model: BaseEmbeddingModel
+        The embedding model to use.
+    """
 
-        Params
-        ------
-        data: The data to vectorize.
-        """
-        logger.debug(f"Vectorizing data using {self.model_name_or_path}...")
-        return self.model.encode(data).tolist()
+    def __init__(self, model: BaseEmbeddingModel):
+        self.model = model
+
+    async def vectorize(self, data: Union[str, list[str]]) -> Union[list[float], list[list[float]]]:
+        model_info = getattr(self.model, "model_name_or_path", "custom model")
+        logger.debug("Vectorizing data using %s", model_info)
+        return await asyncio.to_thread(self.model.encode, data)
+
+
+EMBEDDING_MANAGER = EmbeddingManager(EmbeddingModel())

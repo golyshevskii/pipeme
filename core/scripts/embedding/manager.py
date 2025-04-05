@@ -21,7 +21,14 @@ class EmbeddingManager:
         self.model = model
 
     async def vectorize(self, data: Union[str, list[str]]) -> Union[list[float], list[list[float]]]:
-        model_info = getattr(self.model, "model_name_or_path", "custom model")
+        """
+        Vectorize data using the embedding model.
+
+        Params
+        ------
+        data: The data to vectorize.
+        """
+        model_info = getattr(self.model, "model_name_or_path", "Unknown model")
         logger.debug("Vectorizing data using %s", model_info)
         return await asyncio.to_thread(self.model.encode, data)
 

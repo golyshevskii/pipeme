@@ -11,7 +11,7 @@ from core.agent.prompts import (
 )
 from core.bot.wrapper import USER
 from core.scripts.embedding.manager import EMBEDDING_MANAGER
-from core.scripts.qdrant.manager import AQDRANT_CLIENT
+from core.scripts.qdrant.client import AQDRANT_CLIENT
 from logs.logger import get_logger
 from openai import OpenAI
 from telegram.ext import CallbackContext

@@ -1,70 +1,44 @@
 from config import OPENAI_API_KEY, OPENAI_API_URL
-from core.agent.models import InvalidRequest, Response
-from core.agent.prompts import (
-    ADDITIONAL_INFORMATION,
-    DATA_CONTEXT,
-    SQL_EXAMPLES,
-    WARNINGS,
-    WHAT_TO_DO,
-    WHO_ARE_YOU,
-    YML_EXAMPLES,
-)
+from core.agent.models import Response
+from core.agent.utils import build_system_prompt, find_request_context, transcribe_audio
+from core.bot.wrapper import USER, USER_LOCK
 from logs.logger import get_logger
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
+from telegram.ext import CallbackContext
 
 logger = get_logger(__name__)
 
 OPENAI_MODEL = OpenAIModel("gpt-4o", base_url=OPENAI_API_URL, api_key=OPENAI_API_KEY)
-AGENT: Agent[Response] = Agent(
-    model=OPENAI_MODEL,
-    result_type=Response,
-)
 
 
-@AGENT.system_prompt
-async def system_prompt() -> str:
+async def run_agent(user_id: int, context: CallbackContext) -> None:
     """
-    Build system prompt.
+    Run the agent.
 
-    Fields
+    Params
     ------
-    who_am_i: Explaining who an agent is and what he must do
-    db_schema: Database schema from where an agent will get data about entities
-    yml_examples: Examples how to generate YAML files
-    sql_examples: Examples how to generate SQL queries
-    what_to_do: What an agent must do according to the request
+    user_id: The ID of the user
+    context: The context of the bot
     """
-    return f"""
-    # WHO ARE YOU
-    {WHO_ARE_YOU}
+    if USER[user_id].get("is_audio"):
+        request = await transcribe_audio(user_id, context)
+    else:
+        request = USER[user_id]["request"]
 
-    # WHAT TO DO
-    {WHAT_TO_DO}
+    request_context = await find_request_context(request)
+    system_prompt = await build_system_prompt(request_context)
 
-    # EXAMPLES
-    - YAML:
-    {YML_EXAMPLES}
+    AGENT = Agent[Response] = Agent(model=OPENAI_MODEL, result_type=Response, system_prompt=system_prompt)
 
-    - SQL:
-    {SQL_EXAMPLES}
+    logger.info("Starting the agent for the user %(user_id)s", {"user_id": user_id})
+    result = await AGENT.run(request)
 
-    # WARNINGS
-    {WARNINGS}
+    async with USER_LOCK:
+        USER[user_id]["result"] = result
+        USER[user_id]["data"] = result.data
 
-    --
-
-    # DATA CONTEXT
-    {DATA_CONTEXT}
-
-    # ADDITIONAL INFORMATION
-    {ADDITIONAL_INFORMATION}
-    """
-
-
-@AGENT.result_validator
-async def validate_result(result: Response) -> Response:
-    """Validate agent result."""
-    if isinstance(result, InvalidRequest):
-        return result
-    return result
+    logger.info(
+        "The agent executed successfully for user %(user_id)s. Result: %(result)s",
+        {"user_id": user_id, "result": result.data},
+    )

@@ -1,72 +1,50 @@
-from sentence_transformers import SentenceTransformer, util
+import asyncio
 
-# Инициализируем модель Jina Embeddings v3
-model = SentenceTransformer(
-    "jinaai/jina-embeddings-v3",
-    trust_remote_code=True
-)
+from core.scripts.qdrant.manager import QDRANT_MANAGER
+from core.scripts.qdrant.client import AQDRANT_CLIENT
+from core.scripts.embedding.manager import EMBEDDING_MANAGER
 
-# Пример текстов (наш условный "FAQ-блок")
-FAQ_CONTEXTS = [
-    "У нас есть собственная система для orchestration пайплайнов данных.",
-    "Мы используем Jina Embeddings v3 как модель эмбеддингов.",
-    "Система использует MLflow для трекинга экспериментов.",
-    "Pipeme работает как AI-ассистент в Telegram.",
-    "Для хранения векторов мы используем внутренний векторный стор."
-]
 
-# Предобработаем контекст: получим эмбеддинги всех фрагментов
-task = "retrieval.query"
-faq_embeddings = model.encode(
-    FAQ_CONTEXTS,
-    task=task,
-    prompt_name=task
-)
+async def main():
+    data = [
+        "Trades by month can be found in pipeme.raw.trades_by_month table",
+        "Trades by day can be found in pipeme.raw.trades_by_day table",
+        "Trades by hour can be found in pipeme.raw.trades_by_hour table",
+    ]
 
-def build_prompt(user_query: str, context_block: str) -> str:
-    """
-    Формируем промпт для AI на основе найденного контекста.
-    """
-    prompt = (
-        f"Контекст:\n{context_block}\n\n"
-        f"Вопрос:\n{user_query}\n\n"
-        "Пожалуйста, ответь, используя контекст выше."
-    )
-    return prompt
+    vectors = []
+    for i, data in enumerate(data):
+        vectors.append(
+            {
+                "id": i,
+                "vector": await EMBEDDING_MANAGER.vectorize(data),
+                "payload": {
+                    "source": "DWH",
+                    "project": "pipeme",
+                    "dataset": "raw",
+                    "text": data,
+                }
+            }
+        )
 
-def find_best_context(user_query: str, top_k: int = 1) -> str:
-    """
-    Находим наиболее релевантный фрагмент из FAQ_CONTEXTS
-    для пользовательского запроса.
-    """
-    # Кодируем пользовательский запрос с теми же параметрами
-    query_embedding = model.encode(
-        [user_query],
-        task=task,
-        prompt_name=task
+    QDRANT_MANAGER.upsert_vectors(
+        collection_name="pipeme",
+        vectors=vectors,
     )
 
-    # Считаем косинусную схожесть запроса с нашими фрагментами
-    scores = util.cos_sim(query_embedding, faq_embeddings)[0]
-    # Выбираем top_k фрагментов по убыванию схожести
-    top_results = scores.topk(k=top_k)
+    request = "What is the total volume of trades by month?"
+    vector = await EMBEDDING_MANAGER.vectorize(request)
+    result = await AQDRANT_CLIENT.query_points(
+        collection_name="pipeme",
+        query=vector,
+        score_threshold=0.7,
+        limit=3,
+    )
 
-    # Склеиваем несколько лучших фрагментов в один блок (если top_k > 1)
-    best_contexts = [FAQ_CONTEXTS[idx] for idx in top_results[1]]
-    return "\n".join(best_contexts)
+    print("Request:", request, "\nResult:", result.points[0].payload["text"])
+    # Request: What is the total volume of trades by month? 
+    # Result: Trades by month can be found in pipeme.raw.trades_by_month table
 
-def generate_prompt_for_user_query(user_query: str) -> str:
-    # Ищем лучший контекст
-    context_block = find_best_context(user_query, top_k=1)
-    
-    # Формируем итоговый промпт
-    prompt = build_prompt(user_query, context_block)
-    return prompt
 
 if __name__ == "__main__":
-    user_input = "Какая модель эмбеддингов используется в нашей системе?"
-    prompt_to_ai = generate_prompt_for_user_query(user_input)
-    print(prompt_to_ai)
-
-# Вопрос: Какая модель эмбеддингов используется в нашей системе?
-# Найденный контекст: Мы используем Jina Embeddings v3 как модель эмбеддингов.
+    asyncio.run(main())

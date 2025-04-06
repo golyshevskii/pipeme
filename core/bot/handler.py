@@ -1,8 +1,8 @@
 from io import BytesIO
 from typing import TYPE_CHECKING
 
+from core.agent.agent import run_agent
 from core.agent.models import Response, SuccessRequest
-from core.agent.run import run_agent
 from core.bot.menu import set_confirm_request_inline_menu, set_faq_inline_menu
 from core.bot.wrapper import USER, USER_LOCK, access
 from core.templates.bot.button import BUTTON_MAP

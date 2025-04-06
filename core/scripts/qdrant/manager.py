@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from core.scripts.qdrant.client import QDRANT_CLIENT, QdrantClient
 from logs.logger import get_logger
-from qdrant_client.http.models import Distance, PointStruct, VectorParams
+from qdrant_client.http.models import Distance, PointStruct, UpdateResult, VectorParams, WriteOrdering
 
 logger = get_logger(__name__)
 
@@ -62,7 +62,13 @@ class QdrantManager:
             return True
         logger.warning("Collection %s does not exist. Skipping.", collection_name)
 
-    def upsert_vectors(self, collection_name: str, vectors: list[dict[str, Any]]) -> Optional[bool]:
+    def upsert_vectors(
+        self,
+        collection_name: str,
+        vectors: list[dict[str, Any]],
+        wait: bool = False,
+        ordering: WriteOrdering = WriteOrdering.MEDIUM,
+    ) -> UpdateResult:
         """
         Upsert vectors into a collection.
 
@@ -70,10 +76,23 @@ class QdrantManager:
         ------
         collection_name: The name of the collection to upsert the vectors into.
         vectors: The vectors to upsert.
+        wait: Whether to wait for the operation to complete.
+        ordering: The ordering of the operation.
+            Use "WEAK" for better performance.
+            Use "MEDIUM" for better performance and consistency.
+            Use "STRONG" for better consistency.
         """
-        pass
+        self.create_collection(collection_name=collection_name)
+        result = self.client.upsert(
+            collection_name=collection_name, points=self.build_points(vectors), wait=wait, ordering=ordering
+        )
+        logger.info(
+            "Vectors upsert status: %(status)s. Operation ID: %(id)s",
+            {"id": result.operation_id, "status": result.status},
+        )
+        return result
 
-    def _build_points(self, vectors: list[dict[str, Any]]) -> list[PointStruct]:
+    def build_points(self, vectors: list[dict[str, Any]]) -> list[PointStruct]:
         """
         Build a list of PointStruct objects.
 

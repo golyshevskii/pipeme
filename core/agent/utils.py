@@ -50,10 +50,11 @@ async def find_request_context(user_id: int, request: str, top_n: int = 3) -> st
     top_n: The number of top relevant context to return
     """
     vector = await EMBEDDING_MANAGER.vectorize(request)
-    context = await AQDRANT_CLIENT.search(
+    context = await AQDRANT_CLIENT.query_points(
         collection_name="pipeme",
-        query_vector=vector,
+        query=vector,
         limit=top_n,
+        score_threshold=0.7,
     )
     logger.debug(
         "Context for the user %(user_id)s request: %(context)s", {"user_id": user_id, "context": context}

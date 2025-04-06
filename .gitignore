@@ -175,3 +175,4 @@ cython_debug/
 *-service-account.json
 temp.*py*
 tmp.*py*
+data/qdrant/collections/pipeme/

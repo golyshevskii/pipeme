@@ -13,9 +13,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Respond to /start command."""
     user_id = update.effective_user.id
     username = update.effective_user.username
-    logger.debug(
-        "User %(username)s (%(user_id)s) started the bot", {"username": username, "user_id": user_id}
-    )
+    logger.debug("User %(username)s (%(user_id)s) started the bot", {"username": username, "user_id": user_id})
 
     async with USER_LOCK:
         USER[user_id] = {}

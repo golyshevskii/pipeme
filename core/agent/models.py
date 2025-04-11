@@ -1,8 +1,7 @@
-from typing import Annotated, Union
+from typing import Annotated, TypeAlias
 
 from annotated_types import MinLen
 from pydantic import BaseModel, Field
-from typing_extensions import TypeAlias
 
 
 class SuccessRequest(BaseModel):
@@ -33,4 +32,4 @@ class InvalidRequest(BaseModel):
     error_message: str
 
 
-Response: TypeAlias = Union[SuccessRequest, InvalidRequest]
+Response: TypeAlias = SuccessRequest | InvalidRequest

@@ -13,5 +13,5 @@ TABLE_MAP = {
             CONSTRAINT tg_bot_user_access_pk PRIMARY KEY (id)
         );
         """,
-    },
+    }
 }

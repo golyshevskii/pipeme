@@ -45,9 +45,7 @@ async def on_no_access(update: Update):
 def access(func):
     @wraps(func)
     async def wrapped(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
-        user = await asyncio.get_event_loop().run_in_executor(
-            None, select_tg_bot_user_access, update.effective_user.id
-        )
+        user = await asyncio.get_event_loop().run_in_executor(None, select_tg_bot_user_access, update.effective_user.id)
         await context.bot.set_my_commands(
             HAS_ACCESS_COMMANDS if not user.empty and user.has_access[0] else NO_ACCESS_COMMANDS
         )

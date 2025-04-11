@@ -20,8 +20,7 @@ async def set_menu(only_faq=False):
 async def set_faq_inline_menu():
     """Set FAQ inline menu."""
     inline_keyboard = [
-        [InlineKeyboardButton(BUTTON_MAP[button], callback_data=f"{button}")]
-        for button in INLINE_FAQ_MENU_BUTTON
+        [InlineKeyboardButton(BUTTON_MAP[button], callback_data=f"{button}")] for button in INLINE_FAQ_MENU_BUTTON
     ]
     return InlineKeyboardMarkup(inline_keyboard)
 

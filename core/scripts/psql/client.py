@@ -1,5 +1,5 @@
 from logging import INFO
-from typing import Any, Optional, Union
+from typing import Any
 
 import pandas as pd
 import psycopg2
@@ -20,11 +20,11 @@ class PSQLQueryBuilder:
         schema: str,
         table: str,
         columns: list[dict],
-        update_columns: Optional[list[str]] = None,
+        update_columns: list[str] | None = None,
         do_nothing: bool = False,
         do_update: bool = False,
         constraint: str = None,
-        pkeys: Optional[list[str]] = None,
+        pkeys: list[str] | None = None,
     ) -> str:
         """
         Return specific upsert query, depending on the parameters.
@@ -54,9 +54,7 @@ class PSQLQueryBuilder:
 
         on_conflict_clause, action = "", ""
         if do_update or do_nothing:
-            on_conflict_clause = "ON CONFLICT " + (
-                f"({','.join(pkeys)})" if pkeys else f"ON CONSTRAINT {constraint}"
-            )
+            on_conflict_clause = "ON CONFLICT " + (f"({','.join(pkeys)})" if pkeys else f"ON CONSTRAINT {constraint}")
 
             action = "DO NOTHING"
             if do_update:
@@ -115,13 +113,7 @@ class PSQLClient:
         remote_bind_address: tuple = None,
     ):
         self.conn_str = conn_str
-        self.conn_params = {
-            "username": username,
-            "password": password,
-            "host": None,
-            "port": None,
-            "db": db,
-        }
+        self.conn_params = {"username": username, "password": password, "host": None, "port": None, "db": db}
 
         self.ssh_params = {
             "ssh_address_or_host": ssh_address_or_host,
@@ -133,9 +125,7 @@ class PSQLClient:
         self.ssh_tunnel = None
         self.engine = None
 
-    def execute(
-        self, sql: str, select: bool = False, payload: Optional[dict[str, Any]] = None
-    ) -> Union[pd.DataFrame, None]:
+    def execute(self, sql: str, select: bool = False, payload: dict[str, Any] | None = None) -> pd.DataFrame | None:
         """
         Execute SQL query.
 
@@ -161,9 +151,7 @@ class PSQLClient:
             else:
                 result = connection.execute(text(sql))
                 connection.commit()
-                logger.debug(
-                    "SQL has been executed. Effected rows: %(rowcount)s", {"rowcount": result.rowcount}
-                )
+                logger.debug("SQL has been executed. Effected rows: %(rowcount)s", {"rowcount": result.rowcount})
         self._disconnect()
 
         return data
@@ -175,7 +163,7 @@ class PSQLClient:
         data: list[dict[str, Any]],
         on_conflict_do_nothing: bool = False,
         on_conflict_do_update: bool = False,
-        update_columns: Optional[list[str]] = None,
+        update_columns: list[str] | None = None,
         constraint: str = None,
         pkeys: list[str] = None,
         row_buffer: int = 50000,

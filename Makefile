@@ -6,11 +6,11 @@ path:
 
 # Lint
 lint:
-	cd .github/lint && poetry run black --config pyproject.toml ../../core/
+	cd .github/lint && poetry run ruff format --config pyproject.toml ../../core/
 	cd .github/lint && poetry run ruff check --config pyproject.toml --fix ../../core/
 
 check-lint:
-	cd .github/lint && poetry run black --config pyproject.toml --check ../../core/
+	cd .github/lint && poetry run ruff format --config pyproject.toml --check ../../core/
 	cd .github/lint && poetry run ruff check --config pyproject.toml ../../core/
 
 # Dependencies

@@ -1,14 +1,7 @@
 from io import BytesIO
 
 from config import OPENAI_API_KEY, OPENAI_API_URL
-from core.agent.prompts import (
-    ADDITIONAL_INFORMATION,
-    SQL_EXAMPLES,
-    WARNINGS,
-    WHAT_TO_DO,
-    WHO_ARE_YOU,
-    YML_EXAMPLES,
-)
+from core.agent.prompts import ADDITIONAL_INFORMATION, SQL_EXAMPLES, WARNINGS, WHAT_TO_DO, WHO_ARE_YOU, YML_EXAMPLES
 from core.bot.wrapper import USER
 from core.scripts.embedding.manager import EMBEDDING_MANAGER
 from core.scripts.qdrant.client import AQDRANT_CLIENT
@@ -51,14 +44,9 @@ async def find_request_context(user_id: int, request: str, top_n: int = 3) -> st
     """
     vector = await EMBEDDING_MANAGER.vectorize(request)
     context = await AQDRANT_CLIENT.query_points(
-        collection_name="pipeme",
-        query=vector,
-        limit=top_n,
-        score_threshold=0.7,
+        collection_name="pipeme", query=vector, limit=top_n, score_threshold=0.7
     )
-    logger.debug(
-        "Context for the user %(user_id)s request: %(context)s", {"user_id": user_id, "context": context}
-    )
+    logger.debug("Context for the user %(user_id)s request: %(context)s", {"user_id": user_id, "context": context})
     return context
 
 

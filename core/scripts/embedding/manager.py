@@ -1,5 +1,4 @@
 import asyncio
-from typing import Union
 
 from core.scripts.embedding.model import BaseEmbeddingModel, EmbeddingModel
 from logs.logger import get_logger
@@ -20,7 +19,7 @@ class EmbeddingManager:
     def __init__(self, model: BaseEmbeddingModel):
         self.model = model
 
-    async def vectorize(self, data: Union[str, list[str]]) -> Union[list[float], list[list[float]]]:
+    async def vectorize(self, data: str | list[str]) -> list[float] | list[list[float]]:
         """
         Vectorize data using the embedding model.
 

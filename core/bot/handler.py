@@ -23,10 +23,7 @@ async def handle_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     username = update.message.from_user.username
 
-    logger.debug(
-        "Handling %(username)s (%(user_id)s) user request...",
-        {"username": username, "user_id": user_id},
-    )
+    logger.debug("Handling %(username)s (%(user_id)s) user request...", {"username": username, "user_id": user_id})
 
     async with USER_LOCK:
         if update.message.text:
@@ -40,8 +37,7 @@ async def handle_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
             USER[user_id] = {"request": request, "is_audio": True}
         else:
             logger.info(
-                "User %(username)s (%(user_id)s) sent unknown message",
-                {"username": username, "user_id": user_id},
+                "User %(username)s (%(user_id)s) sent unknown message", {"username": username, "user_id": user_id}
             )
             await update.message.reply_markdown_v2(MESSAGE["unknown_message"])
             return
@@ -62,11 +58,7 @@ async def handle_confirm_request(update: Update, context: CallbackContext):
     query = update.callback_query
 
     await query.answer()
-    await query.edit_message_text(
-        MESSAGE["run_request"],
-        reply_markup=None,
-        parse_mode="MarkdownV2",
-    )
+    await query.edit_message_text(MESSAGE["run_request"], reply_markup=None, parse_mode="MarkdownV2")
 
     try:
         await run_agent(user_id, context)
@@ -84,10 +76,7 @@ async def handle_confirm_request(update: Update, context: CallbackContext):
         yml_bytes = BytesIO(data.yml.encode("utf-8"))
         yml_bytes.name = f"yml_{user_id}.yml"
 
-        media = [
-            InputMediaDocument(media=sql_bytes),
-            InputMediaDocument(media=yml_bytes),
-        ]
+        media = [InputMediaDocument(media=sql_bytes), InputMediaDocument(media=yml_bytes)]
 
         await query.edit_message_text(data.explanation, reply_markup=None)
         await context.bot.send_media_group(chat_id=user_id, media=media)

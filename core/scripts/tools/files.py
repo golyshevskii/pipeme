@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any, Union
+from typing import Any
 
 import yaml
 from logs.logger import get_logger
@@ -8,9 +8,7 @@ from logs.logger import get_logger
 logger = get_logger(__name__)
 
 
-def read_file(
-    path: str, is_json: bool = False, is_yaml: bool = False, encoding: str = "utf-8"
-) -> Union[dict[str, Any], str]:
+def read_file(path: str, is_json: bool = False, is_yaml: bool = False, encoding: str = "utf-8") -> dict[str, Any] | str:
     """
     Read file data.
 

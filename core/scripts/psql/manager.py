@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any
 
 import pandas as pd
 from config import PSQL_CONN_STR
@@ -13,14 +13,14 @@ def select_tg_bot_user_access(user_id: int) -> pd.DataFrame:
     return PSQL.execute(
         f"""
         SELECT id, has_access
-          FROM {TABLE_MAP['tg_bot_user_access']['schema']}.{TABLE_MAP['tg_bot_user_access']['table']}
+          FROM {TABLE_MAP["tg_bot_user_access"]["schema"]}.{TABLE_MAP["tg_bot_user_access"]["table"]}
          WHERE id = {user_id};
         """,
         select=True,
     )
 
 
-def insert_tg_bot_user_access(user_data: Union[dict[str, Any], list[dict[str, Any]]]) -> None:
+def insert_tg_bot_user_access(user_data: dict[str, Any] | list[dict[str, Any]]) -> None:
     """Insert user data into tg_bot_user_access table."""
     PSQL.upsert(
         schema=TABLE_MAP["tg_bot_user_access"]["schema"],

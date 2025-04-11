@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Union
 
 from sentence_transformers import SentenceTransformer
 
@@ -8,7 +7,7 @@ class BaseEmbeddingModel(ABC):
     """Base class for embedding models."""
 
     @abstractmethod
-    def encode(self, data: Union[str, list[str]]) -> Union[list[float], list[list[float]]]:
+    def encode(self, data: str | list[str]) -> list[float] | list[list[float]]:
         """
         Encode data using the defined embedding model.
 
@@ -35,5 +34,5 @@ class EmbeddingModel(BaseEmbeddingModel):
         self.model = SentenceTransformer(model_name_or_path, trust_remote_code=True)
         self.model_name_or_path = model_name_or_path
 
-    def encode(self, data: Union[str, list[str]]) -> Union[list[float], list[list[float]]]:
+    def encode(self, data: str | list[str]) -> list[float] | list[list[float]]:
         return self.model.encode(data).tolist()

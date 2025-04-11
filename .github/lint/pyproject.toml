@@ -9,40 +9,35 @@ license = {text = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
-    "black (>=25.1.0,<26.0.0)",
     "ruff (>=0.9.6,<0.10.0)"
 ]
 
-[tool.black]
-line-length = 110
-target-version = ['py39', 'py310', 'py311', 'py312']
-
 [tool.ruff]
-line-length = 110
-target-version = "py39"
+line-length = 120
+target-version = "py311"
 exclude = [".venv"]
 
 [tool.ruff.lint]
 extend-select = [
-    "I", # Missing required import (auto-fixable)
-    "UP", # Pyupgrade
-    "ASYNC", # subset of flake8-async rules
-    "ISC",  # Checks for implicit literal string concatenation (auto-fixable)
-    "TC", # Rules around TYPE_CHECKING blocks
-    "G", # flake8-logging-format rules
-    "LOG", # flake8-logging rules, most of them autofixable
-    "PT", # flake8-pytest-style rules
-    "TID25", # flake8-tidy-imports rules
-    "E", # pycodestyle rules
-    "W", # pycodestyle rules
+    "I",        # Missing required import (auto-fixable)
+    "UP",       # Pyupgrade
+    "ASYNC",    # subset of flake8-async rules
+    "ISC",      # Checks for implicit literal string concatenation (auto-fixable)
+    "TC",       # Rules around TYPE_CHECKING blocks
+    "G",        # flake8-logging-format rules
+    "LOG",      # flake8-logging rules, most of them autofixable
+    "PT",       # flake8-pytest-style rules
+    "TID25",    # flake8-tidy-imports rules
+    "E",        # pycodestyle rules
+    "W",        # pycodestyle rules
     # Per rule enables
-    "RUF006", # Checks for asyncio dangling task
-    "RUF015", # Checks for unnecessary iterable allocation for first element
-    "RUF019", # Checks for unnecessary key check
-    "RUF100", # Unused noqa (auto-fixable)
+    "RUF006",   # Checks for asyncio dangling task
+    "RUF015",   # Checks for unnecessary iterable allocation for first element
+    "RUF019",   # Checks for unnecessary key check
+    "RUF100",   # Unused noqa (auto-fixable)
     "D1",
     "D2",
-    "D213", # Conflicts with D212.  Both can not be enabled.
+    "D213",     # Conflicts with D212.  Both can not be enabled.
     "D3",
     "D400",
     "D401",
@@ -50,18 +45,18 @@ extend-select = [
     "D403",
     "D412",
     "D419",
-    "PGH004", # Use specific rule codes when using noqa
-    "PGH005", # Invalid unittest.mock.Mock methods/attributes/properties
-    "S101", # Checks use `assert` outside the test cases, test cases should be added into the exclusions
-    "SIM300", # Checks for conditions that position a constant on the left-hand side of the comparison
-              # operator, rather than the right-hand side.
-    "B004", # Checks for use of hasattr(x, "__call__") and replaces it with callable(x)
-    "B006", # Checks for uses of mutable objects as function argument defaults.
-    "B007", # Checks for unused variables in the loop
-    "B017", # Checks for pytest.raises context managers that catch Exception or BaseException.
-    "B019", # Use of functools.lru_cache or functools.cache on methods can lead to memory leaks
-    "B028", # No explicit stacklevel keyword argument found
-    "TRY002", # Prohibit use of `raise Exception`, use specific exceptions instead.
+    "PGH004",   # Use specific rule codes when using noqa
+    "PGH005",   # Invalid unittest.mock.Mock methods/attributes/properties
+    "S101",     # Checks use `assert` outside the test cases, test cases should be added into the exclusions
+    "SIM300",   # Checks for conditions that position a constant on the left-hand side of the comparison
+                # operator, rather than the right-hand side.
+    "B004",     # Checks for use of hasattr(x, "__call__") and replaces it with callable(x)
+    "B006",     # Checks for uses of mutable objects as function argument defaults.
+    "B007",     # Checks for unused variables in the loop
+    "B017",     # Checks for pytest.raises context managers that catch Exception or BaseException.
+    "B019",     # Use of functools.lru_cache or functools.cache on methods can lead to memory leaks
+    "B028",     # No explicit stacklevel keyword argument found
+    "TRY002",   # Prohibit use of `raise Exception`, use specific exceptions instead.
 ]
 ignore = [
     "D100", # Unwanted; Docstring at the top of every file.
@@ -94,7 +89,7 @@ ignore = [
     "Q003",
     "COM812",
     "COM819",
-    "E501", # Formatted code may exceed the line length, leading to line-too-long (E501) errors.
+    "E501",     # Formatted code may exceed the line length, leading to line-too-long (E501) errors.
     "ASYNC110", # TODO: Use `anyio.Event` instead of awaiting `anyio.sleep` in a `while` loop
 ]
 unfixable = [
@@ -105,6 +100,7 @@ unfixable = [
 
 [tool.ruff.format]
 docstring-code-format = true
+skip-magic-trailing-comma = true
 
 [tool.ruff.lint.flake8-type-checking]
 exempt-modules = ["typing", "typing_extensions"]
@@ -115,6 +111,7 @@ fixture-parentheses = false
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
+split-on-trailing-comma = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

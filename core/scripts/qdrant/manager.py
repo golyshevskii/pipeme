@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from core.scripts.qdrant.client import QDRANT_CLIENT, QdrantClient
 from logs.logger import get_logger
@@ -21,7 +21,7 @@ class QdrantManager:
 
     def create_collection(
         self, collection_name: str, vector_size: int = 1024, distance: str = Distance.COSINE
-    ) -> Optional[bool]:
+    ) -> bool | None:
         """
         Create a specific collection.
 
@@ -39,13 +39,12 @@ class QdrantManager:
         """
         if not self.client.collection_exists(collection_name):
             self.client.create_collection(
-                collection_name=collection_name,
-                vectors_config=VectorParams(size=vector_size, distance=distance),
+                collection_name=collection_name, vectors_config=VectorParams(size=vector_size, distance=distance)
             )
             return True
         logger.warning("Collection %s already exists. Skipping.", collection_name)
 
-    def delete_collection(self, collection_name: str) -> Optional[bool]:
+    def delete_collection(self, collection_name: str) -> bool | None:
         """
         Delete a collection.
 

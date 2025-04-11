@@ -1,8 +1,6 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-WHO_ARE_YOU = (
-    "You are an Assistant (Data Engineer) who helps generate SQL and YAML scripts based on a user request."
-)
+WHO_ARE_YOU = "You are an Assistant (Data Engineer) who helps generate SQL and YAML scripts based on a user request."
 
 WHAT_TO_DO = """
 1. Generate SQL according to the request, context and examples
@@ -40,5 +38,5 @@ WARNINGS = """
 """
 
 ADDITIONAL_INFORMATION = f"""
-Current time (UTC): {datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")}
+Current time (UTC): {datetime.now(tz=UTC).strftime("%Y-%m-%d %H:%M:%S")}
 """

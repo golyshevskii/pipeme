@@ -26,7 +26,7 @@ async def run_agent(user_id: int, context: CallbackContext) -> None:
     else:
         request = USER[user_id]["request"]
 
-    request_context = await find_request_context(request)
+    request_context = await find_request_context(user_id=user_id, request=request)
     system_prompt = await build_system_prompt(request_context)
 
     AGENT = Agent[Response] = Agent(model=OPENAI_MODEL, result_type=Response, system_prompt=system_prompt)

@@ -1,4 +1,5 @@
 import asyncio
+import uuid
 from datetime import datetime, timezone
 
 from core.scripts.qdrant.client import get_qdrant_client
@@ -9,14 +10,16 @@ from core.scripts.embedding.manager import EMBEDDING_MANAGER
 async def build_vectors(data: list[str]) -> list[dict]:
     vectors = []
     for i, data in enumerate(data):
+        composite_key = f"confluence:docs:{i}"
         vectors.append(
             {
-                "id": i,
+                "id": str(uuid.uuid5(uuid.NAMESPACE_OID, composite_key)),
                 "vector": await EMBEDDING_MANAGER.vectorize(data),
                 "payload": {
-                    "source": "Confluence",
+                    "source": "confluence",
                     "content": data,
                     "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f"),
+                    "composite_key": composite_key
                 }
             }
         )
@@ -56,5 +59,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    # python -m docs.examples.search_trades
+    # python3 -m docs.examples.search_trades
     asyncio.run(main())

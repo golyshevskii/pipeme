@@ -1,7 +1,7 @@
 [project]
-name = "garage8-agent"
+name = "pipeme"
 version = "0.1.0"
-description = "Garage8 AI Agent"
+description = "Pipeme AI Agent"
 authors = [
     {name = "Slava Golyshevskii",email = "sgolyshevskii@gmail.com"}
 ]
